@@ -1,1 +1,97 @@
+# STM32 RTOS – Inter-Task Communication Using Message Queues
 
+## Overview
+This project demonstrates inter-task communication using **CMSIS-RTOS2 message queues** on an STM32 microcontroller. Three RTOS tasks communicate through two message queues to generate, process, and display integer values over UART.
+
+## Hardware and Software
+- Microcontroller: STM32 Nucleo-F103RB
+- IDE: STM32CubeIDE
+- RTOS API: CMSIS-RTOS2
+- Driver Library: STM32 HAL
+- Communication Interface: USART2 UART
+- UART Configuration: 115200 baud, 8 data bits, no parity, 1 stop bit
+
+## Project Architecture
+
+
+Task 1:  Data Generator
+           |
+           | Generates an integer every second
+           v
+      Message Queue 1
+           |
+           v
+Task 2: Processing Task
+           |
+           | Adds 10 to the received value
+           v
+      Message Queue 2
+           |
+           v
+Task 3: Display Task
+           |
+           v
+     UART Terminal Output
+
+
+## Task Description
+
+### Task 1 – Data Generator
+- Generates an incrementing integer value.
+- Sends the value to Message Queue 1.
+- Uses `osDelay(1000)` to generate a new value approximately every second.
+
+### Task 2 – Processing
+- Receives data from Message Queue 1 using `osMessageQueueGet()`.
+- Adds 10 to the received value.
+- Sends the processed value to Message Queue 2 using `osMessageQueuePut()`.
+
+### Task 3 – Display
+- Receives processed data from Message Queue 2.
+- Displays the received value using `printf()` over USART2.
+- Waits for incoming messages instead of continuously polling the queue.
+
+## Message Queue Configuration
+
+| Parameter | Queue 1 | Queue 2 |
+|---|---|---|
+| Queue handle | `myQueueHandle` | `myQueue02Handle` |
+| Capacity | 10 messages | 10 messages |
+| Message size | `sizeof(uint32_t)` | `sizeof(uint32_t)` |
+| Sender | Task 1 | Task 2 |
+| Receiver | Task 2 | Task 3 |
+
+## Expected Output
+
+```text
+Processed val is:11
+Processed val is:12
+Processed val is:13
+Processed val is:14
+Processed val is:15
+```
+
+The output represents the input value plus 10.
+
+## RTOS Concepts Practiced
+
+- Creating multiple RTOS tasks with `osThreadNew()`
+- Creating message queues with `osMessageQueueNew()`
+- Sending messages using `osMessageQueuePut()`
+- Receiving messages using `osMessageQueueGet()`
+- Blocking a task using `osWaitForever`
+- Understanding queue capacity and timeout behavior
+- Passing data between tasks without directly sharing processing logic
+- Using UART for debugging and displaying task output
+
+## Learning Outcome
+
+This exercise demonstrates how message queues enable structured communication between independent RTOS tasks. Separating data generation, processing, and display helps build a foundation for more complex embedded applications involving sensor acquisition, data processing, and communication interfaces.
+
+## Future Improvements
+
+- Add queue-operation error checking.
+- Experiment with different queue capacities and timeout values.
+- Use a structure to transfer multiple fields in a single message.
+- Experiment with different task priorities and execution delays.
+- Add GPIO or sensor input as the source of data.
