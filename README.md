@@ -22,7 +22,7 @@ Each folder contains an individual project with its source code and a dedicated 
 |---|---|
 | Task 01 – LED Blinking | GPIO control, task creation, periodic delays |
 | Task 02 – Multiple Tasks | Multiple task execution, task priorities, `osDelay()`, UART transmission, task suspension and resumption |
-| Upcoming Projects | Additional RTOS concepts and practical implementations |
+| Task 03 - Queues | Multiple task execution |
 
 ## RTOS Learning Roadmap
 
